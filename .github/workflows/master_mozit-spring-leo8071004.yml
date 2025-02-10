@@ -30,15 +30,12 @@ jobs:
       uses: docker/build-push-action@v3
       with:
         push: true
-        tags: index.docker.io/${{ secrets.AzureAppService_ContainerUsername_9862c0a229e64840930ddb50297f5fb4 }}/hystrix96/aivle_mozit_spring:${{ github.sha }}
+        tags: hystrix96/aivle_mozit_spring:latest
         file: ./Dockerfile
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     steps:
     - name: Deploy to Azure Web App
@@ -48,4 +45,4 @@ jobs:
         app-name: 'mozit-spring-leo8071004'
         slot-name: 'production'
         publish-profile: ${{ secrets.AzureAppService_PublishProfile_3183d62652954083930cb8b324a33106 }}
-        images: 'index.docker.io/${{ secrets.AzureAppService_ContainerUsername_9862c0a229e64840930ddb50297f5fb4 }}/hystrix96/aivle_mozit_spring:${{ github.sha }}'
+        images: 'hystrix96/aivle_mozit_spring:latest'
