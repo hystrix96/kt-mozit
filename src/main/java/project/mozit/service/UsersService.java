@@ -73,7 +73,6 @@ public class UsersService {
     public void logout(String username) {
         if (username != null) {
             redisUtil.deleteData(username);
-            System.out.println("Redis에서 Refresh Token 삭제 완료");
         }
     }
 

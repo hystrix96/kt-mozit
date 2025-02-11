@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import project.mozit.domain.Enterprises;
 import project.mozit.domain.Users;
 import project.mozit.dto.UsersDTO;
 import project.mozit.mapper.UsersMapper;

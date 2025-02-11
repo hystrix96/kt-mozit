@@ -18,15 +18,12 @@ import project.mozit.client.api.FastApiClient;
 import project.mozit.domain.Downloads;
 import project.mozit.domain.Edits;
 import project.mozit.domain.Users;
-//import project.mozit.dto.DetectionDTO;
 import project.mozit.dto.EditsDTO;
-//import project.mozit.dto.MosaicStatusRequest;
 import project.mozit.mapper.DownloadsMapper;
 import project.mozit.repository.DownloadsRepository;
 import project.mozit.repository.EditsRepository;
 import project.mozit.repository.UsersRepository;
 import project.mozit.util.JWTUtil;
-import project.mozit.util.ThumbnailUtil;
 
 
 import java.io.File;
@@ -110,9 +107,6 @@ public class EditService {
             count++;
         }
 
-//        // 파일 저장
-//        Path targetLocation = Paths.get(UPLOAD_DIR, safeFileName);
-//        file.transferTo(targetLocation.toFile());
         // 파일 저장
         Path targetLocation = Paths.get(uploadDir.getAbsolutePath(), safeFileName); // 수정된 부분
         file.transferTo(targetLocation.toFile());
@@ -120,7 +114,6 @@ public class EditService {
         // ✅ 1시간 후 자동 삭제 예약
         scheduleFileDeletion(targetLocation.toFile(), 60 * 60);
 
-//        return "파일이 성공적으로 업로드되었습니다: " + targetLocation.toString();  //저장된 파일 이름 반환
         return targetLocation.toString();  //저장된 파일 이름 반환
     }
 
@@ -135,49 +128,6 @@ public class EditService {
             }
         }, delaySeconds, TimeUnit.SECONDS);
     }
-
-
-//
-//
-//    // 썸네일 추출 메서드
-//    public String extractThumbnail(String videoFileName) throws IOException {
-//        String videoPath = Paths.get(UPLOAD_DIR, videoFileName).toString();
-//
-//        // 체크: 파일이 존재하는지 확인
-//        File videoFile = new File(videoPath);
-//        if (!videoFile.exists()) {
-//            throw new IOException("비디오 파일이 존재하지 않습니다: " + videoPath);
-//        }
-//
-//        // 파일 이름에서 확장자 제거
-//        String baseName = videoFileName.substring(0, videoFileName.lastIndexOf('.'));
-//        String baseThumbnailName = "thumbnail-" + baseName + ".jpg";
-//        String thumbnailPath = Paths.get(UPLOAD_DIR, baseThumbnailName).toString();
-//
-//        // 중복 체크 및 숫자 추가
-//        int count = 1;
-//        while (new File(thumbnailPath).exists()) {
-//            // 썸네일 이름에 숫자를 추가
-//            String newThumbnailName = "thumbnail-" + baseName + "-" + count + ".jpg";
-//            thumbnailPath = Paths.get(UPLOAD_DIR, newThumbnailName).toString();
-//            count++; // 숫자 증가
-//        }
-//
-//        // 썸네일 추출
-//        ThumbnailUtil.extractThumbnail(videoPath, thumbnailPath);
-//
-//        File thumbnailFile = new File(thumbnailPath);
-//
-//        String blobPath = "thumbnail/" + thumbnailFile.getName();
-//        blobStorageService.uploadThumbnail("mozit-container", blobPath, thumbnailFile);
-//
-//        String thumbnailUrl = blobStorageService.getBlobUrl("mozit-container", blobPath);
-//
-//        return thumbnailUrl; // 썸네일 경로 반환
-//    }
-
-
-
 
     public String captureThumbnail(String videoPath) {
         String url = fastApiHost + "/capture_thumbnail"; // FastAPI URL 생성
@@ -226,15 +176,12 @@ public class EditService {
         return savedEdits.getEditNum(); // 저장된 EDIT_NUM 반환
     }
 
-
-
     @Transactional
     public void updateEditTitle(Long editNum, String title) {
         Edits edits = editsRepository.findById(editNum)
                 .orElseThrow(() -> new EntityNotFoundException("해당 편집을 찾을 수 없습니다. ID: " + editNum));
         edits.setEditTitle(title); // 제목 업데이트
     }
-
 
     //다운로드시 모자이크 처리할 내용 DB에 저장.
     @Transactional
@@ -257,11 +204,6 @@ public class EditService {
         downloadsRepository.save(downloads);
     }
 
-
-
-
-
-
     // 파일 다운로드 처리
     public ResponseEntity<Resource> downloadFile(String fileName) throws IOException {
         Path filePath = Paths.get(UPLOAD_DIR, fileName);
@@ -280,8 +222,6 @@ public class EditService {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename*=UTF-8''" + encodedFileName)
                 .body(resource);
     }
-
-
 
     //내 작업 목록 가져오기
     public List<EditsDTO> getEditsByUserId(String token) {
@@ -312,6 +252,5 @@ public class EditService {
 
         return response;
     }
-
 
 }

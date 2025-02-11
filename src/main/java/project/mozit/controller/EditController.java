@@ -30,8 +30,6 @@ public class EditController {
     // 모자이크 상태를 클래스명별로 저장
     private Map<String, Boolean> mosaicStatus = new HashMap<>();
 
-//    private static final String UPLOAD_DIR = "D:\\home\\uploads"; // 비디오 파일이 저장된 경로
-
     private static final Logger log = LoggerFactory.getLogger(EditController.class);
 
 
@@ -117,10 +115,6 @@ public class EditController {
         }
     }
 
-
-
-
-
     //편집 화면에서 동영상 불러오기
     @GetMapping("/videos/{fileName}")
     public ResponseEntity<FileSystemResource> getVideo(@PathVariable("fileName") String fileName) {
@@ -147,7 +141,6 @@ public class EditController {
         }
 
         Map<String, Object> response = new HashMap<>();
-//        response.put("videoUrl", apiHost + "/videos/" + fileName);
         response.put("detections", frameInfos); // 모든 감지 데이터를 추가
 
         return ResponseEntity.ok(response);
@@ -166,32 +159,6 @@ public class EditController {
         return ResponseEntity.ok().build(); // 200 OK
     }
 
-
-
-
-
-
-    // 파일 다운로드 및 DB에 저장
-//    @PostMapping("/download")
-//    public ResponseEntity<Resource> downloadFile(@RequestParam("fileName") String fileName,
-//                                                 @RequestParam("editNum") Long editNum) {
-//        if (fileName == null || fileName.isBlank()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-//        }
-//
-//        try {
-//            // DB에 다운로드 정보 저장
-//            editService.saveDownloadInfo(fileName, editNum);
-//            return editService.downloadFile(fileName);  //동영상 다운로드
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-//        }
-//    }
-
     @PostMapping("/download")
     public ResponseEntity<Void> downloadFile(@RequestBody DownloadsDTO downloadsDTO) {
         Long editNum = downloadsDTO.getEditNum().getEditNum(); // 편집 번호 가져오기
@@ -208,7 +175,6 @@ public class EditController {
             editService.saveDownloadInfo(editNum, faceMosaic, hazardousList, personalList);
 
             // 파일 다운로드 로직 구현 필요=>프런트에서
-            //return editService.downloadFile(fileName); // 동영상 다운로드
 
             // 성공 응답
             return ResponseEntity.ok().build();
